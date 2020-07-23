@@ -11,7 +11,7 @@
 }
 
 .App__nav {
-  background-color: #0b1b32;
+  background-color: #295faa;
   color: #fff;
   grid-area: sidebar;
   height: 100vh;
@@ -19,13 +19,12 @@
 }
 
 .App__header {
-  background-color: #0b1f3a;
+  background-color: #1b4781;
   color: #bdbdbd;
   font-family: var(--custom-font);
   grid-area: header;
   padding-left: 16px;
   padding-top: 32px;
-  text-shadow: 2px 1px 2px black;
 }
 
 .App__header a {
@@ -33,8 +32,12 @@
 }
 
 .App__main {
-  background-color: #102541;
+  background-color: #234e8a;
   grid-area: main;
   height: calc(100vh - 120px);
   overflow: auto;
+}
+
+a {
+  text-decoration: none;
 }
