@@ -1,13 +1,19 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import CircleButton from '../CircleButton/CircleButton'
+import NotefulContext from '../NotefulContext'
 import './NoteListNav.css'
 
-export default function NoteListNav(props) {
+export default class NoteListNav extends React.Component {
+  static contextType= NotefulContext;
+
+  render() {
+    const { folders=[], notes=[] } = this.context
+
   return (
     <div className='NoteListNav'>
       <ul className='NoteListNav__list'>
-        {props.folders.map(folder =>
+        {folders.map(folder =>
           <li key={folder.id}>
             <NavLink
               className='NoteListNav__folder-link'
@@ -30,8 +36,5 @@ export default function NoteListNav(props) {
       </div>
     </div>
   )
-}
-
-NoteListNav.defaultProps = {
-  folders: []
+  }
 }

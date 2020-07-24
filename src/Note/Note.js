@@ -1,17 +1,52 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
+import NotefulContext from '../NotefulContext'
 import './Note.css'
 
-export default function Note(props) {
+export default class Note extends React.Component {
+
+  static defaultProps ={
+    onDeleteNote: () => {},
+  }
+  static contextType = NotefulContext
+
+  handleClickDelete = e => {
+    e.preventDefault()
+    const noteId = this.props.id
+
+    fetch(`http://localhost:9090/notes/${noteId}`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+    })
+      .then(res => {
+        if (!res.ok)
+          return res.json().then(e => Promise.reject(e))
+        return res.json()
+      })
+      .then(() => {
+        this.context.deleteNote(noteId)
+        // allow parent to perform extra behaviour
+        this.props.onDeleteNote(noteId)
+      })
+      .catch(error => {
+        console.error({ error })
+      })
+  }
+
+  render() {
+    const { name, id, modified } = this.props
+
   return (
     <div className='Note'>
       <h2 className='Note__title'>
-        <Link to={`/note/${props.id}`}>
-          {props.name}
+        <Link to={`/note/${id}`}>
+          {name}
         </Link>
       </h2>
-      <button className='Note__delete' type='button'>
+      <button className='Note__delete' type='button' onClick={this.handleClickDelete}>
         remove
       </button>
       <div className='Note__dates'>
@@ -19,10 +54,11 @@ export default function Note(props) {
           Modified
           {' '}
           <span className='Date'>
-            {format(props.modified, 'Do MMM YYYY')}
+            {format(modified, 'Do MMM YYYY')}
           </span>
         </div>
       </div>
     </div>
   )
+  }
 }
