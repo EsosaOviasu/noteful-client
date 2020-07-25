@@ -2,6 +2,8 @@ import React from 'react'
 import Note from '../Note/Note'
 import NotefulContext from '../NotefulContext'
 import './NotePageMain.css'
+import NotefulErrorBoundary from '../NotefulErrorBoundary'
+import PropTypes from 'prop-types';
 
 export default class NotePageMain extends React.Component {
 
@@ -26,11 +28,13 @@ export default class NotePageMain extends React.Component {
 
   return (
     <section className='NotePageMain'>
+      <NotefulErrorBoundary>
       <Note
         id={note.id}
         name={note.name}
         modified={note.modified}
       />
+      </NotefulErrorBoundary>
       <div className='NotePageMain__content'>
         {note.content.split(/\n \r|\n/).map((para, i) =>
           <p key={i}>{para}</p>
@@ -41,3 +45,11 @@ export default class NotePageMain extends React.Component {
   }
 }
 
+NotePageMain.propTypes = {
+    match: PropTypes.shape({
+    isExact: PropTypes.bool,
+    params: PropTypes.object,
+    path: PropTypes.string,
+    url: PropTypes.string,
+  }).isRequired
+}

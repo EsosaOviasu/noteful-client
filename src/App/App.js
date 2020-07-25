@@ -4,20 +4,36 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-import NotefulContext from '../NotefulContext'
+import NotefulErrorBoundary from '../NotefulErrorBoundary';
+import NotefulContext from '../NotefulContext';
+import AddFolder from '../AddFolder';
+import AddNote from '../AddNote';
 import './App.css';
 
 
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
+        addFolder: () => {},
     };
 
     handleDelete= (noteId) => {
         this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
+    }
+
+    handleAddNote= (newNote) => {
+        this.setState({
+            notes: [...this.state.notes, newNote]
+        })
+    }
+
+    handleAddFolder= (newFolder) => {
+        this.setState({
+            folders: [...this.state.folders, newFolder]
+        })
     }
 
     componentDidMount() {
@@ -54,17 +70,23 @@ class App extends Component {
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
+                    <NotefulErrorBoundary>
                     <Route
                         exact
                         key={path}
                         path={path}
                         component={NoteListNav}/>
+                        </NotefulErrorBoundary>
                 ))}
+                <NotefulErrorBoundary>
                 <Route
                     path="/note/:noteId"
                     component={NotePageNav} />
-                <Route path="/add-folder" component={NotePageNav} />
-                <Route path="/add-note" component={NotePageNav} />
+                    </NotefulErrorBoundary>
+                <NotefulErrorBoundary>
+                <Route exact path="/add-folder"
+                component={AddFolder} />
+                </NotefulErrorBoundary>
             </>
         );
     }
@@ -84,15 +106,23 @@ class App extends Component {
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
+                    <NotefulErrorBoundary>
                     <Route
                         exact
                         key={path}
                         path={path}
                         component={NoteListMain}/>
+                        </NotefulErrorBoundary>
                 ))}
+                <NotefulErrorBoundary>
                 <Route
                     path="/note/:noteId"
                     component={NotePageMain}/>
+                    </NotefulErrorBoundary>
+                <NotefulErrorBoundary>
+                <Route exact path="/add-note"
+                component={AddNote}/>
+                </NotefulErrorBoundary>
             </>
         );
     }
@@ -102,6 +132,8 @@ class App extends Component {
             folders: this.state.folders,
             notes: this.state.notes,
             deleteNote: this.handleDelete,
+            addNote: this.handleAddNote,
+            addFolder: this.handleAddFolder,
         }
 
         return (

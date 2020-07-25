@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CircleButton from '../CircleButton/CircleButton'
 import './NotePageNav.css'
 import NotefulContext from '../NotefulContext'
+import PropTypes from 'prop-types';
 
 export default class NotePageNav extends React.Component {
 
@@ -51,3 +52,11 @@ export default class NotePageNav extends React.Component {
   }
 }
 
+NotePageNav.propTypes = {
+  match: PropTypes.shape({
+  isExact: PropTypes.bool,
+  params: PropTypes.object,
+  path: PropTypes.string,
+  url: PropTypes.string,
+}).isRequired
+}

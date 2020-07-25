@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Note from '../Note/Note'
 import CircleButton from '../CircleButton/CircleButton'
 import NotefulContext from '../NotefulContext'
+import NotefulErrorBoundary from '../NotefulErrorBoundary';
+import PropTypes from 'prop-types';
 import './NoteListMain.css'
 
 export default class NoteListMain extends React.Component {
@@ -12,7 +14,7 @@ export default class NoteListMain extends React.Component {
       params: {}
     }
   }
-
+  
   static contextType= NotefulContext
 
   render() {
@@ -30,11 +32,13 @@ export default class NoteListMain extends React.Component {
       <ul>
         {notesForFolder.map(note =>
           <li key={note.id}>
+            <NotefulErrorBoundary>
             <Note
               id={note.id}
               name={note.name}
               modified={note.modified}
             />
+            </NotefulErrorBoundary>
           </li>
         )}
       </ul>
@@ -51,4 +55,14 @@ export default class NoteListMain extends React.Component {
     </section>
   )
   }
+
+}
+
+NoteListMain.propTypes = {
+    match: PropTypes.shape({
+    isExact: PropTypes.bool,
+    params: PropTypes.object,
+    path: PropTypes.string,
+    url: PropTypes.string,
+  }).isRequired
 }

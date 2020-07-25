@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import CircleButton from '../CircleButton/CircleButton'
 import NotefulContext from '../NotefulContext'
+import PropTypes from 'prop-types';
 import './NoteListNav.css'
 
 export default class NoteListNav extends React.Component {
@@ -37,4 +38,13 @@ export default class NoteListNav extends React.Component {
     </div>
   )
   }
+}
+
+NoteListNav.propTypes = {
+    match: PropTypes.shape({
+    isExact: PropTypes.bool,
+    params: PropTypes.object,
+    path: PropTypes.string,
+    url: PropTypes.string,
+  }).isRequired
 }

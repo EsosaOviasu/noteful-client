@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import NotefulContext from '../NotefulContext'
+import PropTypes from 'prop-types';
 import './Note.css'
 
 export default class Note extends React.Component {
@@ -61,4 +62,12 @@ export default class Note extends React.Component {
     </div>
   )
   }
+}
+
+
+Note.propTypes = {
+  id: PropTypes.string.isRequired,
+  modified: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onDeleteNote: PropTypes.object.isRequired,
 }
