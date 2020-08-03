@@ -1,11 +1,42 @@
 import React from 'react';
 import NotefulContext from './NotefulContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import CircleButton from './CircleButton/CircleButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CircleButton from './CircleButton/CircleButton';
+import ValidationError from './ValidationError';
 import nextId from 'react-id-generator';
 import PropTypes from 'prop-types';
 
 class AddNote extends React.Component {
+
+    constructor(props) {
+      super(props)
+      this.state = {
+        name: {
+          value: '',
+          touched: false
+        },
+        content: {
+          value: '',
+          touched: false
+        },
+        date: {
+          value: '',
+          touched: false
+        }
+      };
+    }
+
+    updateName(name) {
+      this.setState({name: {value: name, touched: true}});
+    }
+    
+    updateContent(content) {
+      this.setState({content: {value: content, touched: true}});
+    }
+    
+    updateDate(date) {
+      this.setState({date: {value: date, touched: true}});
+    }
 
     static contextType = NotefulContext
 
@@ -57,6 +88,29 @@ class AddNote extends React.Component {
       }
     
 
+    validateName= () => {
+      const name = this.state.name.value
+      if (name.length === 0) {
+        return 'Name is required';
+      } 
+      else if (name.length < 3) {
+        return 'Name must be at least 3 characters long';
+      }
+    }
+
+    validateContent= () => {
+      const content = this.state.content.value
+      if (content.length === 0) {
+        return 'Note can not be empty';
+      }
+    }
+
+    validateDate= () => {
+      const date = this.state.date.value
+      if (date.length === 0) {
+        return 'A creation date is required';
+      } 
+    }
 
     render() {
         const folderOptions= this.context.folders.map((folder) => {
@@ -72,7 +126,10 @@ class AddNote extends React.Component {
                   <div className="form-group">
                     <label htmlFor="name">Name *</label>
                     <input type="text" className="addNote__control"
-                      name="name" id="name"/>
+                      name="name" id="name" onChange={e => this.updateName(e.target.value)}/>
+                    {this.state.name.touched && (
+                    <ValidationError message={this.validateName()} />
+                    )}
                   </div>
                   <div className="form-group">
                      <label htmlFor="folder">Folder *</label>
@@ -84,18 +141,32 @@ class AddNote extends React.Component {
                   <div className="form-group">
                     <label htmlFor="content">Content *</label>
                     <input type="text" className="addNote__control"
-                      name="content" id="content"/>
+                      name="content" id="content" onChange={e => this.updateContent(e.target.value)}/>
+                    {this.state.content.touched && (
+                    <ValidationError message={this.validateContent()} />
+                    )}
                   </div>
                   <div className="form-group">
                      <label htmlFor="modifiedDate">Date Created *</label>
                      <input type="text" className="addNote__control"
-                      name="modifiedDate" id="modifiedDate" placeholder="YYYY-MM-DD"/>
+                      name="modifiedDate" id="modifiedDate" placeholder="YYYY-MM-DD" onChange={e => this.updateDate(e.target.value)}/>
+                     {this.state.date.touched && (
+                     <ValidationError message={this.validateDate()} />
+                     )}
                   </div>
                   <div className="addNote__button__group">
                    <button type="reset" className="addNote__button">
                        Cancel
                    </button>
-                   <button type="submit" className="addNote__button" onClick={() => this.props.history.goBack()}>
+                   <button
+                   type="submit"
+                   className="addNote__button"
+                   onClick={() => this.props.history.goBack()}
+                   disabled={
+                    this.validateName() ||
+                    this.validateContent() ||
+                    this.validateDate()
+                  }>
                        Save
                    </button>
                   </div>
